@@ -19273,11 +19273,10 @@ def run(button):
         showError("Please enter a valid max price you are willing to pay")
     else:
         threshold = int(priceBox.get_text())
-        
-         driver = webdriver.Firefox()
- 
+       
     #Start the run
-    
+    driver = webdriver.Firefox()
+  
     firstTimeRun = True;    
     #Run every hour
     while 1:
