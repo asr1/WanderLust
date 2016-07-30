@@ -479,6 +479,7 @@
               <object class="GtkButtonBox" id="buttonbox3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Use this section to include or remove specific airports from your travel. At this time, please use three letter airport codes.</property>
                 <property name="layout_style">start</property>
                 <child>
                   <object class="GtkEntry" id="codeBoxTo">

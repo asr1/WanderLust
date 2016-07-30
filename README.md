@@ -20,6 +20,10 @@ prettier date formatting (01-May-2017 would be ideal)
 
 Find a way to reuse all of those nearly identical functions
 
+"Exact Mode" that either allows for trips of exactly n days, or allows for trips on specific days. Not thinking clearly at the moment. It seems like this can be emulated.
+
+Option for one way / round trip tickets
+
 
 Pull requests welcome.
 

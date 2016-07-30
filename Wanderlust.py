@@ -19264,89 +19264,93 @@ def destroyLabelPopup(button):
  
 def run(button):
     #First check that we have all the information we need
+    
+    #Todo clean this whole else/if section up
     toEmail = emailBox.get_text()
     if not re.match(r"[^@]+@[^@]+\.[^@]+", toEmail):
         showError("Please enter a valid email or you won't be notified of good deals.")
-    if priceBox.get_text() == "":
+    elif priceBox.get_text() == "":
         showError("Please enter a valid max price you are willing to pay")
     else:
         threshold = int(priceBox.get_text())
-       
-    #Start the run
-    driver = webdriver.Firefox()
-  
-    firstTimeRun = True;    
-    #Run every hour
-    while 1:
-        dt = datetime.datetime.now() + timedelta(hours=1)
-        
-        #Emulate a do while by skipping the condition
-        #On the initial pass.
-        if firstTimeRun:
-            dt = datetime.datetime.now()
-            firstTimeRun = False
-        
-        while datetime.datetime.now() < dt:
-            time.sleep(1)
-        
-        for city in fromCity: #loop through all cities we're leaving from
-            for destCity in toCity:
-                print(city)
-                for ddate in leaveDates: #And all dates we could leave from
-                    print("Leaving on: " + ddate.strftime("%m/%d/%Y"))
-                    for edate in endDates:
-                        print("Returning on: " + edate.strftime("%m/%d/%Y"))
-                        driver.get("https://www.expedia.com/Flights?v=b") #navigate to Expedia
-                        from_city_elem = driver.find_element_by_id('flight-origin') #Find the textbook for "from"
-                        to_city_elem = driver.find_element_by_id('flight-destination') #And the one for "to"
-                        #Leaving city
-                        from_city_elem.send_keys(city) #And fill them in
-                        from_city_elem.send_keys(Keys.TAB) #Move to the next textbox
-                        time.sleep(1) #Wait a second for that to process
-                        #Arriving city
-                        to_city_elem.send_keys(destCity)
-                        to_city_elem.send_keys(Keys.TAB)
-                        time.sleep(1)
-                        #Departure Date
-                        leave_date_elem = driver.find_element_by_id('flight-departing')
-                        leave_date_elem.send_keys(ddate.strftime("%m/%d/%Y"))
-                        leave_date_elem.send_keys(Keys.TAB)
-                        time.sleep(1)
-                        #Arrival Date
-                        leave_date_elem = driver.find_element_by_id('flight-returning')
-                        leave_date_elem.clear()
-                        time.sleep(1)
-                        leave_date_elem.send_keys(edate.strftime("%m/%d/%Y"))
-                        nextButton = driver.find_element_by_id('search-button')
-                        nextButton.click()
-                        time.sleep(320)#Wait for sorting algorithm to complete
-                        #Prices
-                        price_elem = driver.find_element_by_class_name('price-column')
-                        price = price_elem.get_attribute("data-test-price-per-traveler")
-                        price = price[1:]
-                        price = float(price)
-                        if(price < threshold): #If this is true, send an email
-                            print("Sending email")
-                            #Send an email
-                            msg = MIMEText("$" + str(price) + " from " + city + " to " + destCity + ddate.strftime("%m/%d/%Y") + " to " + edate.strftime("%m/%d/%Y"))
-                            msg['Subject'] = "Plane tickets for " + str(price)
-                            msg['From'] = fromEmail
-                            msg['To'] = toEmail
+        if len(toCity) == 0 or len(fromCity) == 0:
+           showError("Please enter a valid airport for both directions") 
+        else: #Again it's bad to have the main code body in the else statement.
+            print("Still working")
+            #Start the run
+            driver = webdriver.Firefox()
+          
+            firstTimeRun = True;    
+            #Run every hour
+            while 1:
+                dt = datetime.datetime.now() + timedelta(hours=1)
+                
+                #Emulate a do while by skipping the condition
+                #On the initial pass.
+                if firstTimeRun:
+                    dt = datetime.datetime.now()
+                    firstTimeRun = False
+                
+                while datetime.datetime.now() < dt:
+                    time.sleep(1)
+                
+                for city in fromCity: #loop through all cities we're leaving from
+                    for destCity in toCity:
+                        print(city)
+                        for ddate in leaveDates: #And all dates we could leave from
+                            print("Leaving on: " + ddate.strftime("%m/%d/%Y"))
+                            for edate in endDates:
+                                print("Returning on: " + edate.strftime("%m/%d/%Y"))
+                                driver.get("https://www.expedia.com/Flights?v=b") #navigate to Expedia
+                                from_city_elem = driver.find_element_by_id('flight-origin') #Find the textbook for "from"
+                                to_city_elem = driver.find_element_by_id('flight-destination') #And the one for "to"
+                                #Leaving city
+                                from_city_elem.send_keys(city) #And fill them in
+                                from_city_elem.send_keys(Keys.TAB) #Move to the next textbox
+                                time.sleep(1) #Wait a second for that to process
+                                #Arriving city
+                                to_city_elem.send_keys(destCity)
+                                to_city_elem.send_keys(Keys.TAB)
+                                time.sleep(1)
+                                #Departure Date
+                                leave_date_elem = driver.find_element_by_id('flight-departing')
+                                leave_date_elem.send_keys(ddate.strftime("%m/%d/%Y"))
+                                leave_date_elem.send_keys(Keys.TAB)
+                                time.sleep(1)
+                                #Arrival Date
+                                leave_date_elem = driver.find_element_by_id('flight-returning')
+                                leave_date_elem.clear()
+                                time.sleep(1)
+                                leave_date_elem.send_keys(edate.strftime("%m/%d/%Y"))
+                                nextButton = driver.find_element_by_id('search-button')
+                                nextButton.click()
+                                time.sleep(320)#Wait for sorting algorithm to complete
+                                #Prices
+                                price_elem = driver.find_element_by_class_name('price-column')
+                                price = price_elem.get_attribute("data-test-price-per-traveler")
+                                price = price[1:]
+                                price = float(price)
+                                if(price < threshold): #If this is true, send an email
+                                    print("Sending email")
+                                    #Send an email
+                                    msg = MIMEText("$" + str(price) + " from " + city + " to " + destCity + ddate.strftime("%m/%d/%Y") + " to " + edate.strftime("%m/%d/%Y"))
+                                    msg['Subject'] = "Plane tickets for " + str(price)
+                                    msg['From'] = fromEmail
+                                    msg['To'] = toEmail
 
-                            print(msg)
-                            # Send the message via our own SMTP server, but don't include the
-                            # envelope header.
-                            server = smtplib.SMTP('smtp.gmail.com:587')
-                            server.ehlo()
-                            server.starttls()
-                            server.login(fromEmail, password)
-                            server.send_message(msg)
-                            server.quit()
-                        else:
-                            print("Price too high. Trying again")
-    driver.quit()#Close all firefox    
-    
-    
+                                    print(msg)
+                                    # Send the message via our own SMTP server, but don't include the
+                                    # envelope header.
+                                    server = smtplib.SMTP('smtp.gmail.com:587')
+                                    server.ehlo()
+                                    server.starttls()
+                                    server.login(fromEmail, password)
+                                    server.send_message(msg)
+                                    server.quit()
+                                else:
+                                    print("Price too high. Trying again")
+            driver.quit()#Close all firefox    
+      
 handlers = {
     "onDeleteEvent" : Gtk.main_quit,
     "addToFromCity" : addToFromCity,
