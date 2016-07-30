@@ -19247,9 +19247,7 @@ def populate(button):
        
         #If you know exactly what dates you wish to travel
         if exactCheck.get_active():
-            lastLeaveDate = leaveDate
-            endDates.add(leaveDate + timedelta(days=tripLength))
-     
+            showError("Exact mode not implemented yet, try another mode")#Todo
         #Probably better to have the expected case in the if statement, oops.
         else: 
             while(leaveDate <= lastLeaveDate):
