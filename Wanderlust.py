@@ -16,15 +16,6 @@ import re #Verify email address
 #Note that there is a bug where there isn't a min length on trip days. This could be fixed easily.
 #Also, occassionally the window will crash. Just rerun it if that happens.
 
-#Uses expedia.com to email you if prices for plane tickets in any range of dates are in your budget.
-#change extension tpye to .pyw if you want to get rid of the console window.
-#Prereqs: Python3, firefox, selenium
-#Selenium can be installed with:
-#pip install selenium
-#If python3 is installed, pip is installed
-#Just run the pip command from a console window
-
-
 class ListBoxRowWithData(Gtk.ListBoxRow):
     def __init__(self, data):
         super(Gtk.ListBoxRow, self).__init__()
