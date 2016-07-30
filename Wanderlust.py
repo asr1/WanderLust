@@ -19273,40 +19273,11 @@ def run(button):
         showError("Please enter a valid max price you are willing to pay")
     else:
         threshold = int(priceBox.get_text())
-    
-    
-handlers = {
-    "onDeleteEvent" : Gtk.main_quit,
-    "addToFromCity" : addToFromCity,
-    "removeFromFromCity" : removeFromFromCity,
-    "clearFromCity" : clearFromCity,
-    "addToToCity" : addToToCity,
-    "removeFromToCity" : removeFromToCity,
-    "clearToCity" : clearToCity,
-    "populate" : populate,
-    "destroyLabelPopup" : destroyLabelPopup,
-    "addToFromCal" : addToFromCal,
-    "addToToCal" : addToToCal,
-    "removeFromToCal" : removeFromToCal,
-    "removeFromFromCal" : removeFromFromCal,
-    "clearToToCal" : clearToToCal,
-    "clearToFromCal" : clearToFromCal,
-    "run" : run
-}
-builder.connect_signals(handlers)
-
-window.show_all()
-Gtk.main()
-
-
-
-
-    
-def Debugrun():
-    
-    driver = webdriver.Firefox()
         
-
+         driver = webdriver.Firefox()
+ 
+    #Start the run
+    
     firstTimeRun = True;    
     #Run every hour
     while 1:
@@ -19376,4 +19347,28 @@ def Debugrun():
                             server.quit()
                         else:
                             print("Price too high. Trying again")
-    driver.quit()#Close all firefox          
+    driver.quit()#Close all firefox    
+    
+    
+handlers = {
+    "onDeleteEvent" : Gtk.main_quit,
+    "addToFromCity" : addToFromCity,
+    "removeFromFromCity" : removeFromFromCity,
+    "clearFromCity" : clearFromCity,
+    "addToToCity" : addToToCity,
+    "removeFromToCity" : removeFromToCity,
+    "clearToCity" : clearToCity,
+    "populate" : populate,
+    "destroyLabelPopup" : destroyLabelPopup,
+    "addToFromCal" : addToFromCal,
+    "addToToCal" : addToToCal,
+    "removeFromToCal" : removeFromToCal,
+    "removeFromFromCal" : removeFromFromCal,
+    "clearToToCal" : clearToToCal,
+    "clearToFromCal" : clearToFromCal,
+    "run" : run
+}
+builder.connect_signals(handlers)
+
+window.show_all()
+Gtk.main()      
