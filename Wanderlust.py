@@ -19146,7 +19146,7 @@ def addToFromCity(button):
     if code in airportCodesStrings and not isDuplicate(leaveCityBox, code):
         leaveCityBox.add(ListBoxRowWithData(code))
         leaveCityBox.show_all()
-        fromCity.append(code)
+        fromCity.add(code)
         print(fromCity)
 
 def removeFromFromCity(button):
@@ -19171,7 +19171,7 @@ def addToToCity(button):
     if code in airportCodesStrings and not isDuplicate(arriveCityBox, code):
         arriveCityBox.add(ListBoxRowWithData(code))
         arriveCityBox.show_all()
-        toCity.append(code)
+        toCity.add(code)
         print(toCity)
         
 def removeFromToCity(button):
@@ -19191,7 +19191,7 @@ def addToFromCal(button):
     if not isDuplicate(listOfLeaveDates, date):
         listOfLeaveDates.add(ListBoxRowWithData(date))
         listOfLeaveDates.show_all()
-        leaveDates.append(date)     
+        leaveDates.add(date)     
         
 def removeFromFromCal(button):
     row = listOfLeaveDates.get_selected_row()
@@ -19205,7 +19205,7 @@ def addToToCal(button):
     if not isDuplicate(listofReturnDate, date):
         listofReturnDate.add(ListBoxRowWithData(date))
         listofReturnDate.show_all()
-        endDates.append(date)     
+        endDates.add(date)     
         
 def removeFromToCal(button):
     row = listofReturnDate.get_selected_row()
@@ -19225,9 +19225,9 @@ def populate(button):
         tripLength = int(tripLengthEntry.get_text()) 
           
         while(leaveDate <= lastLeaveDate):
-            leaveDates.append(leaveDate)
+            leaveDates.add(leaveDate)
             addToList(listOfLeaveDates, leaveDate)
-            endDates.append(leaveDate + timedelta(days=tripLength))
+            endDates.add(leaveDate + timedelta(days=tripLength))
             addToList(listofReturnDate, leaveDate + timedelta(days=tripLength))
             print(leaveDate)
             leaveDate += timedelta(days=1) #Move to tomorrow
@@ -19282,7 +19282,7 @@ def debugDeleteme():
 
     #If you know exactly what dates you wish to travel, set lastLeavDate = to leaveDate and
     #Comment out the while loop below (lines 46-50). Finally, add the line 
-    #endDates.append(desiredEndDate)
+    #endDates.add(desiredEndDate)
     #Where desiredEndDate is, well, your desired end date. [use date(yyyy,m,d)]
     
 def run():
