@@ -1,16 +1,18 @@
 #!python3
-from selenium import webdriver
+from selenium import webdriver #Automation
 from selenium.webdriver.common.keys import Keys
-from datetime import date
+from datetime import date #Date manipulation
 from datetime import timedelta
 import datetime
 import time
 import smtplib #For sending email
 from email.mime.text import MIMEText
-import gi
+import gi #GUI
 gi.require_version("Gtk", '3.0')
 from gi.repository import Gtk, GObject
-from pprint import pprint
+from pprint import pprint #Debug only
+import re #Verify email address
+
 #Note that there is a bug where there isn't a min length on trip days. This could be fixed easily.
 #Also, occassionally the window will crash. Just rerun it if that happens.
 
@@ -30,6 +32,10 @@ class ListBoxRowWithData(Gtk.ListBoxRow):
         self.add(Gtk.Label(data))
 
  #List of airport codes as strings
+ #Don't expand these.
+ #If your text editor allows collapsing,
+ #Now is the time.
+ #Does python have header files?
 def initializeAirportCodes():
      
     airportCodes = ["ZMH",
@@ -19073,28 +19079,15 @@ def initializeAltAirportCodes():
     return codes
 
 
-    
-    
-#Don't modify these
 fromCity = set()
 toCity = set()
 leaveDates = set()
 endDates = set()
 fromEmail = "wanderlusttickets@gmail.com" #GMAIL.com email address
-password = "w6g/JEr\\"
-hasPopulated = False
-
-#Debug can delete
-def updateEmail(button):
-        emailBox = builder.get_object("emailBox")
-        toEmail = emailBox.get_text()
-        print(toEmail)
-
-
+password = "w6g/JEr\\"#Alright this is open source and I'm trusting ya'll. Don't ruin this for everyone.
  
 airportCodes = initializeAltAirportCodes()
 airportCodesStrings = initializeAirportCodes()
-
  
 #Giant initialization of elements.
 #Easier this way than local scope, oops.
@@ -19102,23 +19095,24 @@ builder = Gtk.Builder()
 builder.add_from_file("Wanderlust.glade")
 window = builder.get_object("applicationwindow1")
 
+#Listboxes
 leaveCityBox = builder.get_object("fromCities")
-codeBoxFrom = builder.get_object("codeBoxFrom")
-
 arriveCityBox = builder.get_object("arriveCityBox")
-codeBoxTo = builder.get_object("codeBoxTo")
-
-fromCal = builder.get_object("fromCal")
-toCal = builder.get_object("toCal") 
-
-tripLengthEntry = builder.get_object("length")
-
 listOfLeaveDates = builder.get_object("fromDates")
 listofReturnDate = builder.get_object("returnDateBox")
 
+#Calendars
+fromCal = builder.get_object("fromCal")
+toCal = builder.get_object("toCal") 
 earlyLeaveDateBox = builder.get_object("earliestLeave")
 lastLeaveDateBox = builder.get_object("latestLeave")
 
+#Textboxes
+tripLengthEntry = builder.get_object("length")
+codeBoxFrom = builder.get_object("codeBoxFrom")
+codeBoxTo = builder.get_object("codeBoxTo")
+emailBox = builder.get_object("emailBox")
+priceBox = builder.get_object("maxPrice")
 
 ##Helper methods
 def isDuplicate(box, code):
@@ -19134,11 +19128,12 @@ def addToList(list, value):
         
 def convertToDate(dateTuple):
     #Months start at zero because of course they do.   
-    return date(dateTuple[0], dateTuple[1] + 1, dateTuple[2])  
+    return date(dateTuple[0], dateTuple[1] + 1, dateTuple[2])    
     
+ ##End Helper methods    
     
- ##End Helper methods   
-    
+#I'd like to formally apologize for names like addToFromCity. 
+ 
 #Add an airport code to departure city
 def addToFromCity(button):
     #pprint(dir(button))
@@ -19165,6 +19160,9 @@ def clearFromCity(button):
 #These functions are going to be duplicates solely because
 #I cannot figure out how to pass an argument, and don't
 #Want to determine behavior based on TOOL TEXT       
+#This would be a great place to improve this code and reduce
+#Reuse.
+
 #Add an airport code to arrival city
 def addToToCity(button):
     code = codeBoxTo.get_text().upper()
@@ -19182,10 +19180,17 @@ def removeFromToCity(button):
         print(toCity)    
 
 def clearToCity(button):
-    toCity.clear()#Update behavior
+    toCity.clear()#Update behavior (backend)
     for child in arriveCityBox.get_children():#Update UI
         arriveCityBox.remove(child)        
 
+def showError(text):
+    labelWarning = builder.get_object("labelWarning")
+    warning = builder.get_object("Warning")
+    warning.set_text(text)
+    labelWarning.show_all()
+        
+#Leave Dates
 def addToFromCal(button):
     date = convertToDate(fromCal.get_date())
     if not isDuplicate(listOfLeaveDates, date):
@@ -19199,7 +19204,13 @@ def removeFromFromCal(button):
         listOfLeaveDates.remove(row)
         leaveDates.remove(row.data)
         print(leaveDates)            
-        
+
+def clearToFromCal(button):
+    leaveDates.clear()
+    for child in listOfLeaveDates.get_children():
+        listOfLeaveDates.remove(child)    
+
+#Return dates        
 def addToToCal(button):
     date = convertToDate(toCal.get_date())
     if not isDuplicate(listofReturnDate, date):
@@ -19214,13 +19225,17 @@ def removeFromToCal(button):
         endDates.remove(row.data)
         print(endDates)    
         
+def clearToToCal(button):
+    endDates.clear()
+    for child in listofReturnDate.get_children():
+        listofReturnDate.remove(child)            
+        
 def populate(button):
     leaveDate = convertToDate(earlyLeaveDateBox.get_date())#The earliest day it's acceptable to fly out.
     lastLeaveDate = convertToDate(lastLeaveDateBox.get_date())#The last day it's acceptable to fly out
     
     if tripLengthEntry.get_text() == "":
-        labelWarning = builder.get_object("labelWarning")
-        labelWarning.show_all()
+        showError("Please ensure you have entered a length")
     else:
         tripLength = int(tripLengthEntry.get_text()) 
           
@@ -19231,16 +19246,18 @@ def populate(button):
             addToList(listofReturnDate, leaveDate + timedelta(days=tripLength))
             print(leaveDate)
             leaveDate += timedelta(days=1) #Move to tomorrow
-    
-    hasPopulated = True
  
 def destroyLabelPopup(button):
     labelPopup = builder.get_object("labelWarning")
     labelPopup.hide()    
-    
-
+ 
+def run(button):
+    #First check that we have all the information we need
+    toEmail = emailBox.get_text()
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", toEmail):
+        showError("Please enter a valid email or you won't be notified of good deals.")
+        
 handlers = {
-    "printEmail": updateEmail,
     "onDeleteEvent" : Gtk.main_quit,
     "addToFromCity" : addToFromCity,
     "removeFromFromCity" : removeFromFromCity,
@@ -19253,7 +19270,10 @@ handlers = {
     "addToFromCal" : addToFromCal,
     "addToToCal" : addToToCal,
     "removeFromToCal" : removeFromToCal,
-    "removeFromFromCal" : removeFromFromCal
+    "removeFromFromCal" : removeFromFromCal,
+    "clearToToCal" : clearToToCal,
+    "clearToFromCal" : clearToFromCal,
+    "run" : run
 }
 builder.connect_signals(handlers)
 
@@ -19264,20 +19284,16 @@ Gtk.main()
 #Only used so doesn't run every time
 def debugDeleteme():
 
-    #Modify these values
-    toEmail = "alexandersrinehart@gmail.com"
     threshold = 1380.0 #Price in dollars
     #Use 3 letter airport codes
-    #fromCity.append("MLI") #Add Moline airport to the array 
-    #fromCity.append("CID") #Add Cedar Rapids to the array
-    #Add or remove fromCity.append() lines until you have all your airports
+    #fromCity.add("MLI") #Add Moline airport to the array 
+    #fromCity.add("CID") #Add Cedar Rapids to the array
+    #Add or remove fromCity.add() lines until you have all your airports
     #toCity.append("SEA") #Destination. If you want multiple, duplicate this line
     
     leaveDate = date.today() #just declaring globally
     lastLeaveDate = date(2017, 5, 4) #The last day it's acceptable to fly out
     triplength = 8 #In days
-
-    #Stop modifying values plesae
 
 
     #If you know exactly what dates you wish to travel, set lastLeavDate = to leaveDate and
@@ -19285,7 +19301,7 @@ def debugDeleteme():
     #endDates.add(desiredEndDate)
     #Where desiredEndDate is, well, your desired end date. [use date(yyyy,m,d)]
     
-def run():
+def Debugrun():
     
     driver = webdriver.Firefox()
         
