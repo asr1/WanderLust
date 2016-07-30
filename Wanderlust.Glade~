@@ -30,6 +30,7 @@
               <object class="GtkEntry" id="emailBox">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Enter the email addrss you would like to receive updates at. Consider adding wanderlust@gmail.com to ensure you don't miss out on deals.</property>
                 <property name="max_width_chars">5</property>
                 <property name="caps_lock_warning">False</property>
                 <property name="input_purpose">email</property>
@@ -41,7 +42,15 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkSeparator" id="separator6">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -71,7 +80,8 @@
               <object class="GtkLabel" id="label4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Max Price</property>
+                <property name="label" translatable="yes">Max Price (USD) (number only)</property>
+                <property name="lines">2</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -80,9 +90,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="entry2">
+              <object class="GtkEntry" id="maxPrice">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Please enter an integer representing the maximum amount you want to be notified for. Please do not include periods or other special characters. Example: 400</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -171,7 +182,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="checkbutton1">
+                  <object class="GtkCheckButton" id="exactCheck">
                     <property name="label" translatable="yes">Exact?</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -247,6 +258,7 @@
               <object class="GtkButtonBox" id="buttonbox1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Use this section to include or remove specific airports from your travel. At this time, please use three letter airport codes.</property>
                 <property name="layout_style">start</property>
                 <child>
                   <object class="GtkEntry" id="codeBoxFrom">
@@ -356,6 +368,7 @@
               <object class="GtkButtonBox" id="buttonbox2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Use this section to include or remove specific dates from your travel.</property>
                 <property name="layout_style">start</property>
                 <child>
                   <object class="GtkCalendar" id="fromCal">
@@ -575,6 +588,7 @@
               <object class="GtkButtonBox" id="buttonbox4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Use this section to include or remove specific dates from your travel.</property>
                 <property name="layout_style">start</property>
                 <child>
                   <object class="GtkCalendar" id="toCal">
@@ -651,7 +665,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Click this button once everything else is filled out.</property>
+                <property name="tooltip_text" translatable="yes">Click this button once everything else is filled out.
+This program will only search for programs while it is running. Please ensure you have firefox installed.</property>
                 <property name="yalign">0.4699999988079071</property>
                 <signal name="clicked" handler="run" swapped="no"/>
               </object>

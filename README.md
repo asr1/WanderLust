@@ -9,5 +9,12 @@ This tool allows you to be notified for cheap, vague tickets. For example, you c
 
 The GUI should be pretty straightforward to use.
 
+#Stretch Goals:
+autocomplete dictionary for airport codes
+	Use a lookup table, and actually map city->code?
+Log last settings and reload on open
+prettier date formatting (01-May-2017 would be ideal)
+Find a way to reuse all of those nearly identical functions
 
 Pull requests welcome.
+

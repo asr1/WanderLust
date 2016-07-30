@@ -19114,6 +19114,9 @@ codeBoxTo = builder.get_object("codeBoxTo")
 emailBox = builder.get_object("emailBox")
 priceBox = builder.get_object("maxPrice")
 
+#Checkboxes
+exactCheck = builder.get_object("exactCheck")
+
 ##Helper methods
 def isDuplicate(box, code):
     for i in box:
@@ -19230,23 +19233,33 @@ def clearToToCal(button):
     for child in listofReturnDate.get_children():
         listofReturnDate.remove(child)            
         
+#Fill out which dates to travel on
 def populate(button):
-    leaveDate = convertToDate(earlyLeaveDateBox.get_date())#The earliest day it's acceptable to fly out.
-    lastLeaveDate = convertToDate(lastLeaveDateBox.get_date())#The last day it's acceptable to fly out
-    
+
+    #Validate length
     if tripLengthEntry.get_text() == "":
         showError("Please ensure you have entered a length")
     else:
         tripLength = int(tripLengthEntry.get_text()) 
-          
-        while(leaveDate <= lastLeaveDate):
-            leaveDates.add(leaveDate)
-            addToList(listOfLeaveDates, leaveDate)
+   
+        leaveDate = convertToDate(earlyLeaveDateBox.get_date())#The earliest day it's acceptable to fly out.
+        lastLeaveDate = convertToDate(lastLeaveDateBox.get_date())#The last day it's acceptable to fly out
+       
+        #If you know exactly what dates you wish to travel
+        if exactCheck.get_active():
+            lastLeaveDate = leaveDate
             endDates.add(leaveDate + timedelta(days=tripLength))
-            addToList(listofReturnDate, leaveDate + timedelta(days=tripLength))
-            print(leaveDate)
-            leaveDate += timedelta(days=1) #Move to tomorrow
- 
+     
+        #Probably better to have the expected case in the if statement, oops.
+        else: 
+            while(leaveDate <= lastLeaveDate):
+                leaveDates.add(leaveDate)
+                addToList(listOfLeaveDates, leaveDate)
+                endDates.add(leaveDate + timedelta(days=tripLength))
+                addToList(listofReturnDate, leaveDate + timedelta(days=tripLength))
+                print(leaveDate)
+                leaveDate += timedelta(days=1) #Move to tomorrow
+     
 def destroyLabelPopup(button):
     labelPopup = builder.get_object("labelWarning")
     labelPopup.hide()    
@@ -19256,7 +19269,12 @@ def run(button):
     toEmail = emailBox.get_text()
     if not re.match(r"[^@]+@[^@]+\.[^@]+", toEmail):
         showError("Please enter a valid email or you won't be notified of good deals.")
-        
+    if priceBox.get_text() == "":
+        showError("Please enter a valid max price you are willing to pay")
+    else:
+        threshold = int(priceBox.get_text())
+    
+    
 handlers = {
     "onDeleteEvent" : Gtk.main_quit,
     "addToFromCity" : addToFromCity,
@@ -19281,25 +19299,8 @@ window.show_all()
 Gtk.main()
 
 
-#Only used so doesn't run every time
-def debugDeleteme():
-
-    threshold = 1380.0 #Price in dollars
-    #Use 3 letter airport codes
-    #fromCity.add("MLI") #Add Moline airport to the array 
-    #fromCity.add("CID") #Add Cedar Rapids to the array
-    #Add or remove fromCity.add() lines until you have all your airports
-    #toCity.append("SEA") #Destination. If you want multiple, duplicate this line
-    
-    leaveDate = date.today() #just declaring globally
-    lastLeaveDate = date(2017, 5, 4) #The last day it's acceptable to fly out
-    triplength = 8 #In days
 
 
-    #If you know exactly what dates you wish to travel, set lastLeavDate = to leaveDate and
-    #Comment out the while loop below (lines 46-50). Finally, add the line 
-    #endDates.add(desiredEndDate)
-    #Where desiredEndDate is, well, your desired end date. [use date(yyyy,m,d)]
     
 def Debugrun():
     
