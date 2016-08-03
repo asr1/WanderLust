@@ -3,7 +3,9 @@ A python script that crawls Expedia for cheap fuzzy flights.
 
 # Prerequisites
 Firefox
+
 Selenium
+
 Python 3
 
 #Usage
