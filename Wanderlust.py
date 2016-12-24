@@ -19076,7 +19076,8 @@ leaveDates = set()
 endDates = set()
 fromEmail = "wanderlusttickets@gmail.com" #GMAIL.com email address
 password = "w6g/JEr\\"#Alright this is open source and I'm trusting ya'll. Don't ruin this for everyone.
- 
+threshold = 0 
+
 airportCodes = initializeAltAirportCodes()
 airportCodesStrings = initializeAirportCodes()
  
