@@ -19314,11 +19314,15 @@ def run(button):
                             time.sleep(1)
                             #Departure Date
                             leave_date_elem = driver.find_element_by_id('flight-departing')
+                            driver.execute_script("arguments[0].removeAttribute('readonly','readonly')",leave_date_elem);
+                           
                             leave_date_elem.send_keys(ddate.strftime("%m/%d/%Y"))
                             leave_date_elem.send_keys(Keys.TAB)
                             time.sleep(1)
                             #Arrival Date
                             leave_date_elem = driver.find_element_by_id('flight-returning')
+                            driver.execute_script("arguments[0].removeAttribute('readonly','readonly')",leave_date_elem);
+
                             leave_date_elem.clear()
                             time.sleep(1)
                             leave_date_elem.send_keys(edate.strftime("%m/%d/%Y"))
