@@ -19314,15 +19314,13 @@ def run(button):
                             time.sleep(1)
                             #Departure Date
                             leave_date_elem = driver.find_element_by_id('flight-departing')
-                            driver.execute_script("arguments[0].removeAttribute('readonly','readonly')",leave_date_elem);
-                           
+                            driver.execute_script("arguments[0].removeAttribute('readonly','readonly')",leave_date_elem);        
                             leave_date_elem.send_keys(ddate.strftime("%m/%d/%Y"))
                             leave_date_elem.send_keys(Keys.TAB)
                             time.sleep(1)
                             #Arrival Date
                             leave_date_elem = driver.find_element_by_id('flight-returning')
                             driver.execute_script("arguments[0].removeAttribute('readonly','readonly')",leave_date_elem);
-
                             leave_date_elem.clear()
                             time.sleep(1)
                             leave_date_elem.send_keys(edate.strftime("%m/%d/%Y"))
@@ -19333,7 +19331,7 @@ def run(button):
                             price_elem = driver.find_element_by_class_name('price-column')
                             price = price_elem.get_attribute("data-test-price-per-traveler")
                             price = price[1:]
-                            price = float(price)
+                            price = float(price.replace(',',''))
                             if(price < threshold): #If this is true, send an email
                                 print("Sending email")
                                 #Send an email
